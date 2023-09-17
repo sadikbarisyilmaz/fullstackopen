@@ -28,8 +28,9 @@ const App = () => {
     const person = persons.filter((person) => person.name === newName)[0];
 
     const confirmUpdatePerson = (id, newNumber, newName) => {
-      window.confirm("Update This Persons Number ?") &&
-        updatePerson(id, newNumber, newName);
+      window.confirm(
+        `"${newName}" already exists in the phonebook, update this persons number ?`
+      ) && updatePerson(id, newNumber, newName);
     };
 
     if (persons.filter((person) => person.name === newName).length > 0) {
