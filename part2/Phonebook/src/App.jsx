@@ -2,32 +2,43 @@ import { useState } from "react";
 import { Filter } from "./components/Filter";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
+import { useEffect } from "react";
+import { getPersons, postPerson, updatePerson } from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
-
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState(null);
   const [filter, setFilter] = useState("");
 
-  console.log(persons);
+  useEffect(() => {
+    getPersons(setPersons);
+  }, []);
+
   const handleChangeName = (e) => {
     setNewName(e.target.value);
   };
   const handleChangeNumber = (e) => {
     setNewNumber(e.target.value);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    persons.map((person) => person.name).includes(newName)
-      ? alert(`"${newName}" already exists in the phonebook`)
-      : setPersons([...persons, { name: newName, number: newNumber }]);
+    const person = persons.filter((person) => person.name === newName)[0];
+
+    const confirmUpdatePerson = (id, newNumber, newName) => {
+      window.confirm("Update This Persons Number ?") &&
+        updatePerson(id, newNumber, newName);
+    };
+
+    if (persons.filter((person) => person.name === newName).length > 0) {
+      person.number == newNumber
+        ? alert(`"${newName}" already exists in the phonebook`)
+        : confirmUpdatePerson(person.id, newNumber, newName);
+    } else {
+      postPerson(newName, newNumber);
+    }
   };
 
   return (
