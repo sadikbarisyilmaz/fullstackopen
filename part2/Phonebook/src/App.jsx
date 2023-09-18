@@ -4,16 +4,34 @@ import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
 import { useEffect } from "react";
 import { getPersons, postPerson, updatePerson } from "./services/persons";
+import { Notification } from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState(null);
   const [filter, setFilter] = useState("");
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
     getPersons(setPersons);
   }, []);
+
+  const toastSuccess = () => {
+    setToastMessage(`Added ${newName}`);
+    setToast(true);
+    setTimeout(() => {
+      setToast(false);
+    }, 2000);
+  };
+  const toastError = (name) => {
+    setToastMessage(`Perseon "${name}" is Already deleted`);
+    setToast(true);
+    setTimeout(() => {
+      setToast(false);
+    }, 2000);
+  };
 
   const handleChangeName = (e) => {
     setNewName(e.target.value);
@@ -38,13 +56,15 @@ const App = () => {
         ? alert(`"${newName}" already exists in the phonebook`)
         : confirmUpdatePerson(person.id, newNumber, newName);
     } else {
-      postPerson(newName, newNumber);
+      toastSuccess(), postPerson(newName, newNumber);
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {toast && <Notification toastMessage={toastMessage} />}
       <Filter setFilter={setFilter} />
       <h3>Add a new person</h3>
       <PersonForm
@@ -53,7 +73,7 @@ const App = () => {
         handleSubmit={handleSubmit}
       />
       <h3>Numbers</h3>
-      <Persons filter={filter} persons={persons} />
+      <Persons filter={filter} persons={persons} toastError={toastError} />
     </div>
   );
 };

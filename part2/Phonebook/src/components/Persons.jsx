@@ -1,9 +1,13 @@
 import React from "react";
 import { removePersons } from "../services/persons";
 
-export const Persons = ({ persons, filter }) => {
+export const Persons = ({ persons, filter, toastError }) => {
   const deletePerson = (id) => {
-    window.confirm("Delete This Person ?") && removePersons(id);
+    const person = persons.filter((person) => person.id === id)[0];
+    window.confirm("Delete This Person ?") &&
+      removePersons(id).catch(() => {
+        toastError(person.name);
+      });
   };
 
   return (
