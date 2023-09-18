@@ -18,15 +18,29 @@ const App = () => {
     getPersons(setPersons);
   }, []);
 
-  const toastSuccess = () => {
+  const toastPost = () => {
     setToastMessage(`Added ${newName}`);
     setToast(true);
     setTimeout(() => {
       setToast(false);
     }, 2000);
   };
+  const toastUpdate = () => {
+    setToastMessage(`Updated ${newName}`);
+    setToast(true);
+    setTimeout(() => {
+      setToast(false);
+    }, 2000);
+  };
+  const toastDelete = (name) => {
+    setToastMessage(`Deleted ${name}`);
+    setToast(true);
+    setTimeout(() => {
+      setToast(false);
+    }, 2000);
+  };
   const toastError = (name) => {
-    setToastMessage(`Perseon "${name}" is Already deleted`);
+    setToastMessage(`Person "${name}" is Already deleted`);
     setToast(true);
     setTimeout(() => {
       setToast(false);
@@ -54,9 +68,10 @@ const App = () => {
     if (persons.filter((person) => person.name === newName).length > 0) {
       person.number == newNumber
         ? alert(`"${newName}" already exists in the phonebook`)
-        : confirmUpdatePerson(person.id, newNumber, newName);
+        : confirmUpdatePerson(person.id, newNumber, newName),
+        toastUpdate();
     } else {
-      toastSuccess(), postPerson(newName, newNumber);
+      toastPost(), postPerson(newName, newNumber);
     }
   };
 
@@ -73,7 +88,12 @@ const App = () => {
         handleSubmit={handleSubmit}
       />
       <h3>Numbers</h3>
-      <Persons filter={filter} persons={persons} toastError={toastError} />
+      <Persons
+        filter={filter}
+        persons={persons}
+        toastDelete={toastDelete}
+        toastError={toastError}
+      />
     </div>
   );
 };
