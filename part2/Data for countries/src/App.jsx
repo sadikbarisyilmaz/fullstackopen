@@ -42,14 +42,12 @@ function App() {
     return arr;
   };
 
-  const fetchWeather = async () => {
-    const city = "Sweden";
+  const fetchWeather = async (city) => {
     const weather = await axios.get(
       `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
     );
     setWeather(weather.data);
   };
-
   return (
     <div>
       <label htmlFor="">Search Countries: </label>
