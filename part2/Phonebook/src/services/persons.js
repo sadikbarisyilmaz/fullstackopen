@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3000/persons";
+const baseUrl = "https://fullstackopen-part3.vercel.app/api/persons";
 
 export const getPersons = async (setPersons) => {
   const persons = await axios.get(baseUrl);
